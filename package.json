@@ -1,26 +1,20 @@
 {
   "name": "react-native-multiple-select",
-  "version": "0.5.12",
+  "version": "0.6.0",
   "description": "Simple multi-select component for react-native",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "precommit": "lint-staged",
-    "test": "jest",
-    "lint": "eslint lib/",
-    "publish": "npm publish --access public"
-  },
-  "jest": {
-    "preset": "jest-react-native"
-  },
-  "lint-staged": {
-    "*.{js,json,css}": [
-      "prettier --single-quote --write",
-      "git add"
-    ]
+    "build": "tsc",
+    "prepublishOnly": "tsc",
+    "format": "prettier --write src/",
+    "format:check": "prettier --check src/",
+    "lint": "eslint src/",
+    "test": "tsc --noEmit && jest"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/toystars/react-native-multiple-select.git"
+    "url": "git+https://github.com/riebel/react-native-multiple-select.git"
   },
   "keywords": [
     "reactnative",
@@ -31,35 +25,32 @@
   "author": "Mustapha Babatunde Oluwaleke",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/toystars/react-native-multiple-select/issues"
+    "url": "https://github.com/riebel/react-native-multiple-select/issues"
   },
-  "homepage": "https://github.com/toystars/react-native-multiple-select#readme",
-  "dependencies": {
-    "prop-types": "^15.7.2"
-  },
+  "homepage": "https://github.com/riebel/react-native-multiple-select#readme",
   "devDependencies": {
-    "babel-eslint": "^10.0.2",
-    "babel-jest": "24.9.0",
-    "babel-preset-react-native": "^4.0.1",
-    "eslint": "^6.5.1",
-    "eslint-config-airbnb": "^17.1.1",
-    "eslint-config-react-native": "^4.0.0",
-    "eslint-plugin-import": "^2.18.1",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.14.3",
-    "eslint-plugin-react-native": "^3.7.0",
-    "husky": "^3.1.0",
-    "jest": "^24.9.0",
-    "lint-staged": "^9.4.3",
-    "prettier": "^1.19.1",
-    "react-test-renderer": "16.9.0",
-    "remote-redux-devtools": "^0.5.16"
+    "@eslint/js": "^9.0.0",
+    "@react-native/babel-preset": "^0.83.1",
+    "@testing-library/react-native": "^13.3.3",
+    "@types/jest": "^30.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-test-renderer": "^19.1.0",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-native": "^5.0.0",
+    "jest": "^30.2.0",
+    "prettier": "^3.8.1",
+    "react": "^19.2.4",
+    "react-native": "^0.83.1",
+    "react-test-renderer": "^19.2.4",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.4.0",
+    "typescript-eslint": "^8.0.0"
   },
   "peerDependencies": {
-    "deprecated-react-native-prop-types": ">2.0.0",
-    "lodash": ">4.17.00",
-    "react": ">16.6.0",
-    "react-native": ">0.57.0",
-    "react-native-vector-icons": ">6.0.0"
+    "react": ">=16.8.0",
+    "react-native": ">=0.60.0"
   }
 }
