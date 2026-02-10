@@ -1,7 +1,7 @@
 {
-  "name": "react-native-multiple-select",
-  "version": "0.6.0",
-  "description": "Simple multi-select component for react-native",
+  "name": "@riebel/react-native-multiple-select",
+  "version": "0.6.1",
+  "description": "Modernized Simple multi-select component for react-native",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
