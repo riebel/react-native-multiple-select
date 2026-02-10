@@ -2,209 +2,249 @@
 
 [![npm](https://img.shields.io/npm/v/react-native-multiple-select.svg)](https://www.npmjs.com/package/react-native-multiple-select) [![Downloads](https://img.shields.io/npm/dt/react-native-multiple-select.svg)](https://www.npmjs.com/package/react-native-multiple-select) [![Licence](https://img.shields.io/npm/l/react-native-multiple-select.svg)](https://www.npmjs.com/package/react-native-multiple-select)
 
-> Simple multi-select component for react-native (Select2 for react-native).
+> Simple multi-select component for React Native, written in TypeScript.
 
 ![multiple](https://user-images.githubusercontent.com/16062709/30819847-0907dd1e-a218-11e7-9980-e70b2d8e7953.gif)  ![single](https://user-images.githubusercontent.com/16062709/30819849-095d6144-a218-11e7-85b9-4e2b96f9ead9.gif)
 
-
-## Important notice
-I've been super busy with work and other projects lately that I really don't have enough time to dedicate to this project. If you would like to maintain this project, you can drop me an [email](mailto:toystars2008@gmail.com). Thanks.
-
 ## Installation
 
-``` bash
-$ npm install react-native-multiple-select --save
-```
-or use yarn
-
-``` bash
-$ yarn add react-native-multiple-select
+```bash
+npm install react-native-multiple-select
 ```
 
+or with yarn:
+
+```bash
+yarn add react-native-multiple-select
+```
+
+### Peer dependencies
+
+- `react` >= 16.8.0
+- `react-native` >= 0.60.0
+
+### Icon library
+
+This component does **not** bundle an icon library. You provide your own via the `iconComponent` prop. The component you pass must accept `name`, `size?`, `color?`, `style?`, and `onPress?` props.
+
+Icon names default to **MaterialCommunityIcons** names. Use the `iconNames` prop to remap them for other icon sets:
+
+| Key | Default | Purpose |
+|-----|---------|---------|
+| `search` | `magnify` | Search input icon |
+| `close` | `close-circle` | Tag remove icon |
+| `check` | `check` | Selected item checkmark |
+| `arrowDown` | `menu-down` | Dropdown indicator |
+| `arrowRight` | `menu-right` | Dropdown indicator (hideSubmitButton) |
+| `arrowLeft` | `arrow-left` | Back / close dropdown |
+
+**MaterialCommunityIcons** (defaults work out of the box):
+
+```tsx
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons'
+// or
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
+
+<MultiSelect iconComponent={MaterialCommunityIcons} items={items} ... />
+```
+
+**Ionicons:**
+
+```tsx
+import Ionicons from '@expo/vector-icons/Ionicons'
+
+<MultiSelect
+  iconComponent={Ionicons}
+  iconNames={{
+    search: 'search',
+    close: 'close-circle',
+    check: 'checkmark',
+    arrowDown: 'chevron-down',
+    arrowRight: 'chevron-forward',
+    arrowLeft: 'arrow-back'
+  }}
+  items={items}
+  ...
+/>
+```
+
+**FontAwesome 6:**
+
+```tsx
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
+
+<MultiSelect
+  iconComponent={FontAwesome6}
+  iconNames={{
+    search: 'magnifying-glass',
+    close: 'circle-xmark',
+    check: 'check',
+    arrowDown: 'chevron-down',
+    arrowRight: 'chevron-right',
+    arrowLeft: 'arrow-left'
+  }}
+  items={items}
+  ...
+/>
+```
 
 ## Usage
-Note: Ensure to add and configure [react-native-vector-icons](https://github.com/oblador/react-native-vector-icons) to your project before using this package.
 
-You can clone and try out the [sample](https://github.com/toystars/RN-multiple-select-sample) app or you can try [sample](https://github.com/AugustoAleGon/react-native-multiple-select-sample)
+```tsx
+import React, { useRef, useState } from 'react'
+import { View } from 'react-native'
+import MultiSelect from 'react-native-multiple-select'
+import type { MultiSelectRef } from 'react-native-multiple-select'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 
-The snippet below shows how the component can be used
+const items = [
+  { id: '92iijs7yta', name: 'Ondo' },
+  { id: 'a0s0a8ssbsd', name: 'Ogun' },
+  { id: '16hbajsabsd', name: 'Calabar' },
+  { id: 'nahs75a5sg', name: 'Lagos' },
+  { id: '667atsas', name: 'Maiduguri' },
+  { id: 'hsyasajs', name: 'Anambra' },
+  { id: 'djsjudksjd', name: 'Benue' },
+  { id: 'sdhyaysdj', name: 'Kaduna' },
+  { id: 'suudydjsjd', name: 'Abuja' }
+]
 
+const MultiSelectExample = () => {
+  const [selectedItems, setSelectedItems] = useState<string[]>([])
+  const multiSelectRef = useRef<MultiSelectRef>(null)
 
-```javascript
-// import component
-import React, { Component } from 'react';
-import { View } from 'react-native';
-import MultiSelect from 'react-native-multiple-select';
-
-const items = [{
-    id: '92iijs7yta',
-    name: 'Ondo'
-  }, {
-    id: 'a0s0a8ssbsd',
-    name: 'Ogun'
-  }, {
-    id: '16hbajsabsd',
-    name: 'Calabar'
-  }, {
-    id: 'nahs75a5sg',
-    name: 'Lagos'
-  }, {
-    id: '667atsas',
-    name: 'Maiduguri'
-  }, {
-    id: 'hsyasajs',
-    name: 'Anambra'
-  }, {
-    id: 'djsjudksjd',
-    name: 'Benue'
-  }, {
-    id: 'sdhyaysdj',
-    name: 'Kaduna'
-  }, {
-    id: 'suudydjsjd',
-    name: 'Abuja'
-    }
-];
-
-class MultiSelectExample extends Component {
-
-  state = {
-    selectedItems : []
-  };
-
-  
-  onSelectedItemsChange = selectedItems => {
-    this.setState({ selectedItems });
-  };
-
-  render() {
-    const { selectedItems } = this.state;
-
-    return (
-      <View style={{ flex: 1 }}>
-        <MultiSelect
-          hideTags
-          items={items}
-          uniqueKey="id"
-          ref={(component) => { this.multiSelect = component }}
-          onSelectedItemsChange={this.onSelectedItemsChange}
-          selectedItems={selectedItems}
-          selectText="Pick Items"
-          searchInputPlaceholderText="Search Items..."
-          onChangeInput={ (text)=> console.log(text)}
-          altFontFamily="ProximaNova-Light"
-          tagRemoveIconColor="#CCC"
-          tagBorderColor="#CCC"
-          tagTextColor="#CCC"
-          selectedItemTextColor="#CCC"
-          selectedItemIconColor="#CCC"
-          itemTextColor="#000"
-          displayKey="name"
-          searchInputStyle={{ color: '#CCC' }}
-          submitButtonColor="#CCC"
-          submitButtonText="Submit"
-        />
-        <View>
-          {this.multiSelect.getSelectedItemsExt(selectedItems)}
-        </View>
+  return (
+    <View style={{ flex: 1 }}>
+      <MultiSelect
+        hideTags
+        items={items}
+        iconComponent={MaterialCommunityIcons}
+        uniqueKey="id"
+        ref={multiSelectRef}
+        onSelectedItemsChange={setSelectedItems}
+        selectedItems={selectedItems}
+        selectText="Pick Items"
+        searchInputPlaceholderText="Search Items..."
+        onChangeInput={(text) => console.log(text)}
+        tagRemoveIconColor="#CCC"
+        tagBorderColor="#CCC"
+        tagTextColor="#CCC"
+        selectedItemTextColor="#CCC"
+        selectedItemIconColor="#CCC"
+        itemTextColor="#000"
+        displayKey="name"
+        searchInputStyle={{ color: '#CCC' }}
+        submitButtonColor="#CCC"
+        submitButtonText="Submit"
+      />
+      <View>
+        {multiSelectRef.current?.getSelectedItemsExt(selectedItems)}
       </View>
-    );
-  }
+    </View>
+  )
 }
-
 ```
-
-The component takes 3 compulsory props - `items`, `uniqueKey` and `onSelectedItemsChange`. Other props are optional. The table below explains more.
-
 
 ## Props
 
-| Prop        | Required   | Purpose  |
-| ------------- |-------------| -----|
-| altFontFamily | No      | (String) Font family for `searchInputPlaceholderText` |
-| canAddItems | No      | (Boolean) Defaults to "false". This allows a user to add items to the list of items provided. You need to handle adding the new items in the onAddItem function prop. Items may be added with the return key on the native keyboard. |
-| displayKey | No | (String) Defaults to "name". This string will be used to select the key to display the objects in the items array |
-| fixedHeight | No     | (Boolean) Defaults to false. Specifies if select dropdown take height of content or a fixed height with a scrollBar (There is an issue with this behavior when component is nested in a ScrollView in which scroll event will only be dispatched to parent ScrollView and select component won't be scrollable). See [this issue](https://github.com/toystars/react-native-multiple-select/issues/12) for more info. |
-| filterMethod | No | (String) Defaults to  "partial". options: ["partial", "full"] Choose the logic on how the system filters items based on searchTerm. partial: checks all individual words and if at least one word matches will include that item. full: checks to ensure the item contains the full substring of searchterm in order minus any leading or trailing spaces.
-| flatListProps | No | (Object) Properties for the FlatList. Pass any property that is required on the FlatList of the dropdown menu |
-| fontFamily | No     | (String) Custom font family to be used in component (affects all text except `searchInputPlaceholderText` described above) |
-| fontSize | No     | (Number) Font size for selected item name displayed as label for multiselect |
-| hideDropdown | No | (Boolean) Defaults false. Hide dropdown menu with a cancel, and use arrow-back |
-| hideSubmitButton | No | (Boolean) Defaults to false. Hide submit button from dropdown, and rather use arrow-button in search field |
-| hideTags | No | (Boolean) Defaults to false. Hide tokenized selected items, in case selected items are to be shown somewhere else in view (check below for more info) |
-| searchIcon | No | (Element, Object, boolean, Function) Element or functional component to change the Search Icon |
-| itemFontFamily | No   | (String) Font family for each non-selected item in multi-select drop-down |
-| itemFontSize | No   | (Number) Font size used for each item in the multi-select drop-down |
-| itemTextColor | No   | (String) Text color for each non-selected item in multi-select drop-down |
-| items      | Yes | (Array, control prop) List of items to display in the multi-select component. JavaScript Array of objects. Each object must contain a name and unique identifier (Check sample above) |
-|noItemsText| No| (String) Text that replace default "no items to display"|
-| onAddItem | No   | (Function) JavaScript function passed in as an argument. The function is called everytime a new item is added, and receives the entire list of items. Here you should ensure that the new items are added to your provided list of `items` in addition to any other consequences of new items being added. |
-| onChangeInput | No    | (Function) JavaScript function passed in as an argument. The function is called everytime `TextInput` is changed with the value. |
-| onClearSelector | No | (Function) JavaScript function passeed in as an argument. The function is called everytime `back button` is pressed |
-| onSelectedItemsChange | Yes      | (Function) JavaScript function passed in as an argument. The function is to be defined with an argument (selectedItems). Triggered when `Submit` button is clicked (for multi select) or item is clicked (for single select). (Check sample above) |
-| onToggleList | No | (Function) JavaScript function passed in as an argument. The function is called everytime the `multiselect` component is pressed |
-| searchInputPlaceholderText | No      | (String) Placeholder text displayed in multi-select filter input |
-| searchInputStyle | No   | (Object) Style object for multi-select input element  |
-| selectText | No     | (String) Text displayed in main component |
-| selectedText | No | (String) Text displayed when an item is selected can be replaced by any string|
-| selectedItemFontFamily | No   | (String) Font family for each selected item in multi-select drop-down |
-| selectedItemIconColor | No     | (String) Color for `selected` check icon for each selected item in multi-select drop-down |
-| selectedItemTextColor | No   | (String) Text color for each selected item in multi-select drop-down |
-| single | No     | (Boolean) Toggles select component between single option and multi option |
-| styleDropdownMenu | No | (Style) Style the view of the dropdown menu |
-| styleDropdownMenuSubsection | No | (Style) Style the inner view of the dropdown menu |
-| styleIndicator | No | (Style) Style the Icon for indicator |
-| styleInputGroup | No | (Style) Style the Container of the Text Input Group |
-| styleItemsContainer | No | (Style) Style the Container of the items that are displayed in a list |
-| styleListContainer | No | (Style) Style the Container of main list. See [this issue] (https://github.com/toystars/react-native-multiple-select/issues/12)|
-| styleMainWrapper | No | (Style) Style the Main Container of the MultiSelector |
-| styleRowList | No | (Style) Style the Row that is displayed after you |
-| styleSelectorContainer | No | (Style) Style the Container of the Selector when user clicks on the dropdown|
-| styleTextDropdown | No | (Text Style) Style text of the Dropdown |
-| styleTextDropdownSelected | No | (Text Style) Style text of the Dropdown selected |
-| styleTextTag | No | (Text Style) Style text of the tag |
-| submitButtonColor | No   | (String) Background color for submit button  |
-| submitButtonText | No   | (String) Text displayed on submit button  |
-| tagBorderColor | No      | (String) Border color for each selected item  |
-| tagContainerStyle | No | (Style) Style the container of the tag view |
-| tagRemoveIconColor | No      | (String) Color to be used for the remove icon in selected items list |
-| tagTextColor | No  | (String) Text color for selected items list |
-| textColor | No     | (String) Color for selected item name displayed as label for multiselect  |
-| textInputProps | No | (Object) Properties for the Text Input. Pass any property that is required on the text input |
-| uniqueKey      | Yes      | (String) Unique identifier that is part of each item's properties. Used internally as means of identifying each item (Check sample below) |
-|selectedItems | No      | (Array, control prop) List of selected items keys . JavaScript Array of strings, that can be instantiated with the component |
-| removeSelected | No  | (Boolean) Filter selected items from list to be shown in List |
+### Required
 
-## Note
+| Prop | Type | Purpose |
+|------|------|---------|
+| `items` | `MultiSelectItem[]` | Array of objects to display. Each object must contain a name and unique identifier |
+| `iconComponent` | `IconComponentType` | Icon component to render icons (e.g. `MaterialCommunityIcons`) |
+| `onSelectedItemsChange` | `(items: string[]) => void` | Called when selection changes |
 
-- Tokenized selected items can be displayed in any other part of the view by adding a `ref` to the `MultiSelect` component like so `ref={(component) => { this.multiSelect = component }}`. Then add this to any part of the screen you want the tokens to show up: `this.multiSelect.getSelectedItemsExt(selectedItems)`. The `selectedItems` argument passed into the above mentioned method is the same `selectedItems` passed as the main component selected items prop. (See example above).
+### Optional
 
-- If users shouldn't be able to select any of the items in the dropdown list, set a `disabled` key to true in the item. Such item will be rendered in gray and won't be clickable.
+| Prop | Type | Default | Purpose |
+|------|------|---------|---------|
+| `iconNames` | `Partial<IconNames>` | MaterialCommunityIcons defaults | Override icon names for other icon libraries (see above) |
+| `single` | `boolean` | `false` | Toggle between single and multi select mode |
+| `selectedItems` | `string[]` | `[]` | Array of selected item keys |
+| `uniqueKey` | `string` | `'_id'` | Key used to uniquely identify each item |
+| `displayKey` | `string` | `'name'` | Key used to display item label |
+| `selectText` | `string` | `'Select'` | Text displayed on the main component |
+| `selectedText` | `string` | `'selected'` | Text appended to selection count |
+| `searchInputPlaceholderText` | `string` | `'Search'` | Placeholder for the search input |
+| `searchIcon` | `ReactNode` | magnify icon | Custom search icon element |
+| `noItemsText` | `string` | `'No items to display.'` | Text shown when no items match |
+| `filterMethod` | `'partial' \| 'full'` | `'partial'` | Search matching strategy |
+| `canAddItems` | `boolean` | `false` | Allow users to add new items via the search input |
+| `removeSelected` | `boolean` | `false` | Hide already-selected items from the dropdown |
+| `hideTags` | `boolean` | `false` | Hide tokenized selected items below the selector |
+| `hideSubmitButton` | `boolean` | `false` | Hide the submit button in the dropdown |
+| `hideDropdown` | `boolean` | `false` | Hide dropdown cancel, show back arrow instead |
+| `fixedHeight` | `boolean` | `false` | Use fixed height with scroll instead of auto height |
+| `fontSize` | `number` | `14` | Font size for the dropdown label |
+| `itemFontSize` | `number` | `16` | Font size for each item in the dropdown |
+| `fontFamily` | `string` | `''` | Custom font family for the component |
+| `altFontFamily` | `string` | `''` | Font family for the placeholder text |
+| `itemFontFamily` | `string` | `''` | Font family for non-selected items |
+| `selectedItemFontFamily` | `string` | `''` | Font family for selected items |
+| `textColor` | `string` | `'#525966'` | Color for the dropdown label |
+| `itemTextColor` | `string` | `'#525966'` | Text color for non-selected items |
+| `selectedItemTextColor` | `string` | `'#00A5FF'` | Text color for selected items |
+| `selectedItemIconColor` | `string` | `'#00A5FF'` | Check icon color for selected items |
+| `tagBorderColor` | `string` | `'#00A5FF'` | Border color for selected item tags |
+| `tagTextColor` | `string` | `'#00A5FF'` | Text color for selected item tags |
+| `tagRemoveIconColor` | `string` | `'#C62828'` | Color for the tag remove icon |
+| `submitButtonColor` | `string` | `'#CCC'` | Background color for the submit button |
+| `submitButtonText` | `string` | `'Submit'` | Text on the submit button |
+| `searchInputStyle` | `StyleProp<TextStyle>` | | Style for the search input |
+| `tagContainerStyle` | `StyleProp<ViewStyle>` | | Style for tag containers |
+| `styleMainWrapper` | `StyleProp<ViewStyle>` | | Style for the outermost wrapper |
+| `styleDropdownMenu` | `StyleProp<ViewStyle>` | | Style for the dropdown menu view |
+| `styleDropdownMenuSubsection` | `StyleProp<ViewStyle>` | | Style for the inner dropdown view |
+| `styleInputGroup` | `StyleProp<ViewStyle>` | | Style for the search input group |
+| `styleItemsContainer` | `StyleProp<ViewStyle>` | | Style for the items container |
+| `styleListContainer` | `StyleProp<ViewStyle>` | | Style for the list container |
+| `styleRowList` | `StyleProp<ViewStyle>` | | Style for each item row |
+| `styleSelectorContainer` | `StyleProp<ViewStyle>` | | Style for the open selector container |
+| `styleTextDropdown` | `StyleProp<TextStyle>` | | Style for dropdown text |
+| `styleTextDropdownSelected` | `StyleProp<TextStyle>` | | Style for dropdown text when items are selected |
+| `styleTextTag` | `StyleProp<TextStyle>` | | Style for tag text |
+| `styleIndicator` | `StyleProp<ViewStyle>` | | Style for the dropdown indicator icon |
+| `textInputProps` | `TextInputProps` | | Additional props for the TextInput |
+| `flatListProps` | `Partial<FlatListProps>` | | Additional props for the FlatList |
 
-- When using the `single` prop, `selectedItems` should still be passed in as an array of selected items keys. Also, when an item is selected in the single mode, the selected item is returned as an array of string.
+### Callbacks
 
-- The `items` props must be passed as an array of objects with a compulsory `name` key present in each object as the name key is used to display the items in the options component.
+| Prop | Type | Purpose |
+|------|------|---------|
+| `onAddItem` | `(newItems: MultiSelectItem[]) => void` | Called when a new item is added |
+| `onChangeInput` | `(text: string) => void` | Called when the search input changes |
+| `onClearSelector` | `() => void` | Called when the back button is pressed |
+| `onToggleList` | `() => void` | Called when the selector is toggled |
 
-- filterMethod partial example: searchTerm = "University of New" will return "University of New York", "University of New Orleans", "The University of New York" as well as "University of Columbia" and "New England Tech" due to partial matches.
+## Notes
 
-- filterMethod full example: searchTerm = "University of New" will return" University of New York", "University of New Orleans", "The University of New York" because all three contain the substring "University of New"
+- **Displaying tags elsewhere:** Use a ref to call `getSelectedItemsExt(selectedItems)` and render tags in a different part of your view.
 
-### Removing all selected items
+- **Disabled items:** Set `disabled: true` on an item object to render it in gray and make it non-interactive.
 
-To use, add ref to MultiSelect component in parent component, then call method against reference. i.e.
+- **Single mode:** `selectedItems` should still be passed as an array. The selected item is returned as a single-element array.
 
-```javascript
-<MultiSelect
-  ref={c => this._multiSelect = c}
-  ...
-/>
+- **Display key:** By default the component uses the `name` key to display items. Use `displayKey` to change this.
 
-clearSelectedCategories = () => {
-   this._multiSelect._removeAllItems();
-};
+- **Filter methods:**
+  - `partial`: "University of New" matches "University of New York" but also "University of Columbia" and "New England Tech" (individual word matches)
+  - `full`: "University of New" only matches items containing the full substring "University of New"
 
+## TypeScript
+
+This package is written in TypeScript and ships type declarations. Exported types:
+
+```tsx
+import type {
+  MultiSelectProps,
+  MultiSelectItem,
+  MultiSelectRef,
+  IconProps,
+  IconComponentType,
+  IconNames
+} from 'react-native-multiple-select'
 ```
-
 
 ## Contributing
 
@@ -212,29 +252,22 @@ Contributions are **welcome** and will be fully **credited**.
 
 Contributions are accepted via Pull Requests on [Github](https://github.com/toystars/react-native-multiple-select).
 
-
 ### Pull Requests
 
-- **Document any change in behaviour** - Make sure the `README.md` and any other relevant documentation are kept up-to-date.
-
-- **Consider our release cycle** - We try to follow [SemVer v2.0.0](http://semver.org/). Randomly breaking public APIs is not an option.
-
+- **Document changes in behaviour** - Keep the README and relevant docs up-to-date.
+- **Follow SemVer** - We follow [SemVer v2.0.0](http://semver.org/).
 - **Create feature branches** - Don't ask us to pull from your master branch.
-
 - **One pull request per feature** - If you want to do more than one thing, send multiple pull requests.
-
-- **Send coherent history** - Make sure each individual commit in your pull request is meaningful. If you had to make multiple intermediate commits while developing, please [squash them](http://www.git-scm.com/book/en/v2/Git-Tools-Rewriting-History#Changing-Multiple-Commit-Messages) before submitting.
-
+- **Squash commits** - Make sure each commit in your PR is meaningful.
 
 ## Issues
 
-Check issues for current issues.
+Check [issues](https://github.com/toystars/react-native-multiple-select/issues) for current issues.
 
 ## Contributors
 
-Here is list of [CONTRIBUTORS](CONTRIBUTORS.md)
-
+See [CONTRIBUTORS](CONTRIBUTORS.md)
 
 ## License
 
-The MIT License (MIT). Please see [LICENSE](LICENSE) for more information.
+The MIT License (MIT). See [LICENSE](LICENSE) for more information.
