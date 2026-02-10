@@ -9,13 +9,13 @@
 ## Installation
 
 ```bash
-npm install react-native-multiple-select
+npm install @riebel/react-native-multiple-select
 ```
 
 or with yarn:
 
 ```bash
-yarn add react-native-multiple-select
+yarn add @riebel/react-native-multiple-select
 ```
 
 ### Peer dependencies
@@ -244,6 +244,30 @@ import type {
   IconComponentType,
   IconNames
 } from 'react-native-multiple-select'
+```
+
+### Type assertions
+
+**`iconComponent`** — Icon libraries such as `@expo/vector-icons` type their `name` prop as a narrow union of string literals, which conflicts with `IconComponentType`'s `name: string`. Cast the component to silence this:
+
+```tsx
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
+import type { IconComponentType } from '@riebel/react-native-multiple-select'
+
+<MultiSelect iconComponent={MaterialCommunityIcons as IconComponentType} ... />
+```
+
+**`items`** — `MultiSelectItem` has an index signature (`[key: string]: unknown`). Custom interfaces without that signature are not directly assignable, even if all properties match at runtime. Use a double assertion:
+
+```tsx
+interface MyItem {
+  id: string
+  label: string
+}
+
+const items: MyItem[] = [...]
+
+<MultiSelect items={items as unknown as MultiSelectItem[]} ... />
 ```
 
 ## Contributing
