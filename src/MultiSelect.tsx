@@ -209,7 +209,7 @@ const MultiSelect = forwardRef<MultiSelectRef, MultiSelectProps>(
           .split(' ')
           .filter((word) => word.length)
           .join('-')
-        const newItems = [...items, { [uniqueKey]: newItemId, name: newItemName }]
+        const newItems = [...items, { [uniqueKey]: newItemId, [displayKey]: newItemName }]
         const newSelectedItems = [...selectedItems, newItemId]
         onAddItem?.(newItems)
         onSelectedItemsChange(newSelectedItems)
@@ -219,6 +219,7 @@ const MultiSelect = forwardRef<MultiSelectRef, MultiSelectProps>(
       searchTerm,
       items,
       uniqueKey,
+      displayKey,
       selectedItems,
       onAddItem,
       onSelectedItemsChange,
@@ -287,7 +288,9 @@ const MultiSelect = forwardRef<MultiSelectRef, MultiSelectProps>(
               >
                 <Icon
                   name={names.close}
-                  style={[styles.tagRemoveIcon, { color: tagRemoveIconColor }]}
+                  size={22}
+                  color={tagRemoveIconColor}
+                  style={styles.tagRemoveIcon}
                 />
               </TouchableOpacity>
             </View>
@@ -371,7 +374,9 @@ const MultiSelect = forwardRef<MultiSelectRef, MultiSelectProps>(
               {itemSelected(item) ? (
                 <Icon
                   name={names.check}
-                  style={[styles.checkIcon, { color: selectedItemIconColor }]}
+                  size={20}
+                  color={selectedItemIconColor}
+                  style={styles.checkIcon}
                 />
               ) : null}
             </View>
@@ -408,13 +413,13 @@ const MultiSelect = forwardRef<MultiSelectRef, MultiSelectProps>(
                   item.disabled ? styles.disabledText : {}
                 ]}
               >
-                Add {getDisplayValue(item, 'name')} (tap or press return)
+                Add {getDisplayValue(item, displayKey)} (tap or press return)
               </Text>
             </View>
           </View>
         </TouchableOpacity>
       ),
-      [addItem, itemStyle]
+      [addItem, itemStyle, displayKey]
     )
 
     const renderItems = useCallback(() => {
@@ -440,7 +445,9 @@ const MultiSelect = forwardRef<MultiSelectRef, MultiSelectProps>(
             nestedScrollEnabled
           />
         )
-        searchTermMatch = renderList.some((item) => item.name === searchTerm)
+        searchTermMatch = renderList.some(
+          (item) => getDisplayValue(item, displayKey) === searchTerm
+        )
       } else if (!canAddItems) {
         itemList = (
           <View style={styles.noItemsRow}>
@@ -453,7 +460,7 @@ const MultiSelect = forwardRef<MultiSelectRef, MultiSelectProps>(
 
       let addItemRow: React.ReactNode = null
       if (canAddItems && !searchTermMatch && searchTerm.length) {
-        addItemRow = getRowNew({ name: searchTerm })
+        addItemRow = getRowNew({ [displayKey]: searchTerm })
       }
 
       return (
@@ -475,7 +482,8 @@ const MultiSelect = forwardRef<MultiSelectRef, MultiSelectProps>(
       fontFamily,
       noItemsText,
       getRowNew,
-      styleListContainer
+      styleListContainer,
+      displayKey
     ])
 
     return (
@@ -499,6 +507,8 @@ const MultiSelect = forwardRef<MultiSelectRef, MultiSelectProps>(
                 <TouchableOpacity onPress={submitSelection}>
                   <Icon
                     name={names.arrowDown}
+                    size={30}
+                    color={colorPack.placeholderTextColor}
                     style={[styles.indicator, styles.indicatorPadded, styleIndicator]}
                   />
                 </TouchableOpacity>
@@ -570,6 +580,8 @@ const MultiSelect = forwardRef<MultiSelectRef, MultiSelectProps>(
                     </Text>
                     <Icon
                       name={hideSubmitButton ? names.arrowRight : names.arrowDown}
+                      size={30}
+                      color={colorPack.placeholderTextColor}
                       style={[styles.indicator, styleIndicator]}
                     />
                   </View>

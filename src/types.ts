@@ -15,7 +15,8 @@ export interface IconProps {
   onPress?: () => void
 }
 
-export type IconComponentType = ComponentType<IconProps>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type IconComponentType = ComponentType<any> & ComponentType<IconProps>
 
 export interface IconNames {
   search?: string
