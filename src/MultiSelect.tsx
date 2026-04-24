@@ -11,16 +11,10 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  FlatList,
-  UIManager
+  FlatList
 } from 'react-native'
 import styles, { colorPack, selectorViewStyle } from './styles'
 import type { MultiSelectProps, MultiSelectItem, MultiSelectRef } from './types'
-
-// set UIManager LayoutAnimationEnabledExperimental
-if (UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true)
-}
 
 const getDisplayValue = (item: MultiSelectItem, key: string): string => {
   const val = item[key]
